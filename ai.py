@@ -40,20 +40,20 @@ class AI(Player):
 
     def placePilePlayAttempt(self, board, indexToPlace):
         indexList = list(range(12))
-        return self.attemptPlacement(board, indexToPlace, self.placePile, indexList, self.playResultForPlacePile)
+        return self.attemptPlacement(board, indexToPlace, self.woodPile, indexList, self.playResultForWoodPile)
 
     def stackingPilesPlayAttempt(self, board, indexToPlace, stackPileIndex):
         if stackPileIndex == -1:
             stackPileList = list(range(3))
             random.shuffle(stackPileList)
             for y in stackPileList:
-                if len(self.stackingPiles[y]) > 0:
-                    self.index = self.attemptPlacement(board, indexToPlace, self.stackingPiles[y], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, y))
+                if len(self.postPiles[y]) > 0:
+                    self.index = self.attemptPlacement(board, indexToPlace, self.postPiles[y], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, y))
                     if self.index != -1:
                         return self.index, y
             return -1, -1
         elif stackPileIndex != -1 and pygame.time.get_ticks() > self.timeDelay + self.waitTime:
-            if self.attemptPlacement(board, indexToPlace, self.stackingPiles[stackPileIndex], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, stackPileIndex)) == -1:
+            if self.attemptPlacement(board, indexToPlace, self.postPiles[stackPileIndex], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, stackPileIndex)) == -1:
                 return -1, -1
         return indexToPlace, stackPileIndex
 

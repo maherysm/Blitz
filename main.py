@@ -146,10 +146,10 @@ def main():
                 pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
                 screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
                 pygame.display.update()
-                player1.flipPlacePile()
-                player2.flipPlacePile()
-                player3.flipPlacePile()
-                player4.flipPlacePile()
+                player1.flipWoodPile()
+                player2.flipWoodPile()
+                player3.flipWoodPile()
+                player4.flipWoodPile()
 
         # if the mouse is clicked and a card is selected, it will try to place the card down
         if controls.leftButtonClick() and player1.cardSelected:
@@ -166,7 +166,7 @@ def main():
                         player1.playResultForStackPile(True, board[darkOrLightState], placeDownPosIndex,
                                                        (player1.selectedCardIndexOnGameBoard - 2))
                     if player1.selectedCardIndexOnGameBoard == 0:
-                        player1.playResultForPlacePile(True, board[darkOrLightState], placeDownPosIndex)
+                        player1.playResultForWoodPile(True, board[darkOrLightState], placeDownPosIndex)
                     if player1.selectedCardIndexOnGameBoard == 1:
                         player1.playResultForBlitzPile(True, board[darkOrLightState], placeDownPosIndex)
                     sound.cardPlace.play()
@@ -176,7 +176,7 @@ def main():
 
             # if hovering over cards in the stacking pile
             elif stackingPosIndex in range(2, 5):
-                if player1.stackAttempt(player1.stackingPiles[stackingPosIndex - 2][0], player1.selectedCard):
+                if player1.stackAttempt(player1.postPiles[stackingPosIndex - 2][0], player1.selectedCard):
                     if player1.selectedCardIndexOnGameBoard in range(2, 5):
                         player1.stackResultForStackPile(True, player1.selectedCardIndexOnGameBoard - 2,
                                                         stackingPosIndex - 2)

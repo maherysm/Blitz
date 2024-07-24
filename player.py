@@ -32,11 +32,11 @@ class Player():
             self.rotationDirection = 90
 
         self.blitzPile = []  # List of 10 cards
-        self.stacking1 = []
-        self.stacking2 = []
-        self.stacking3 = []
-        self.stackingPiles = [self.stacking1, self.stacking2, self.stacking3]
-        self.placePile = []
+        self.postPile1 = []
+        self.postPile2 = []
+        self.postPile3 = []
+        self.postPiles = [self.postPile1, self.postPile2, self.postPile3]
+        self.woodPile = []
         self.cardSelected = False
         self.selectedCard = 0
         self.selectedCardIndexOnGameBoard = -1
@@ -45,28 +45,28 @@ class Player():
     def displayPlayerCards(self, screen, cardLocations):
         #if the below 5 cards exist, they will be printed to the screen in their designated locations, but only after
         #they are rotated the correct amount for each player
-        if self.placePile:
-            screen.blit(pygame.transform.rotate(self.placePile[0].image, self.rotationDirection), cardLocations[0])
+        if self.woodPile:
+            screen.blit(pygame.transform.rotate(self.woodPile[0].image, self.rotationDirection), cardLocations[0])
         if self.blitzPile:
             screen.blit(pygame.transform.rotate(self.blitzPile[0].image, self.rotationDirection), cardLocations[1])
-        if self.stackingPiles[0]:
-            screen.blit(pygame.transform.rotate(self.stackingPiles[0][0].image, self.rotationDirection), cardLocations[2])
-        if self.stackingPiles[1]:
-            screen.blit(pygame.transform.rotate(self.stackingPiles[1][0].image, self.rotationDirection), cardLocations[3])
-        if self.stackingPiles[2]:
-            screen.blit(pygame.transform.rotate(self.stackingPiles[2][0].image, self.rotationDirection), cardLocations[4])
+        if self.postPiles[0]:
+            screen.blit(pygame.transform.rotate(self.postPiles[0][0].image, self.rotationDirection), cardLocations[2])
+        if self.postPiles[1]:
+            screen.blit(pygame.transform.rotate(self.postPiles[1][0].image, self.rotationDirection), cardLocations[3])
+        if self.postPiles[2]:
+            screen.blit(pygame.transform.rotate(self.postPiles[2][0].image, self.rotationDirection), cardLocations[4])
 
     # given the index, returns a card object if it is there. Otherwise, dont return anything
     def findSelectedCard(self, cardPosIndex):
         if cardPosIndex == 0:
-            if len(self.placePile) > 0:
-                return self.placePile[0]
+            if len(self.woodPile) > 0:
+                return self.woodPile[0]
         if cardPosIndex == 1:
             if len(self.blitzPile) > 0:
                 return self.blitzPile[0]
         if cardPosIndex in range(2, 5):
-            if len(self.stackingPiles[cardPosIndex - 2]) > 0:
-                return self.stackingPiles[cardPosIndex - 2][0]
+            if len(self.postPiles[cardPosIndex - 2]) > 0:
+                return self.postPiles[cardPosIndex - 2][0]
 
     def shuffleDeck(self):
         random.shuffle(self.deck)
@@ -75,9 +75,9 @@ class Player():
     def createInitialHand(self, board):
         for x in range(10):
             self.blitzPile.append(self.deck.pop(0))
-        self.stackingPiles[0].append(self.deck.pop(0))
-        self.stackingPiles[1].append(self.deck.pop(0))
-        self.stackingPiles[2].append(self.deck.pop(0))
+        self.postPiles[0].append(self.deck.pop(0))
+        self.postPiles[1].append(self.deck.pop(0))
+        self.postPiles[2].append(self.deck.pop(0))
 
     # returns true if the card attempted to stack is opposite gender and descending
     # number from the stack pile
@@ -91,20 +91,20 @@ class Player():
         # if the stack is valid
         if condition:
             # inserts the top card from the grabbing pile into the placing pile
-            (self.stackingPiles[placingPileIndex]).insert(0, self.stackingPiles[grabbingPileIndex][0])
+            (self.postPiles[placingPileIndex]).insert(0, self.postPiles[grabbingPileIndex][0])
             # removes the "top" element from the grabbing pile
-            self.stackingPiles[grabbingPileIndex].pop(0)
+            self.postPiles[grabbingPileIndex].pop(0)
 
             # if the pile that was grabbed from is empty, replace with a card from the blitz pile
-            if len(self.stackingPiles[grabbingPileIndex]) == 0:
-                (self.stackingPiles[grabbingPileIndex]).insert(0, self.blitzPile[0])
+            if len(self.postPiles[grabbingPileIndex]) == 0:
+                (self.postPiles[grabbingPileIndex]).insert(0, self.blitzPile[0])
                 self.blitzPile.pop(0)
 
     def stackResultForBlitzPile(self, condition, placingPileIndex):
         # if the stack is valid
         if condition:
             # inserts the top card from the grabbing pile into the placing pile
-            (self.stackingPiles[placingPileIndex]).insert(0, self.blitzPile[0])
+            (self.postPiles[placingPileIndex]).insert(0, self.blitzPile[0])
             # removes the "top" element from the grabbing pile
             self.blitzPile.pop(0)
 
@@ -112,7 +112,7 @@ class Player():
         # if the stack is valid
         if condition:
             # inserts the top card from the grabbing pile into the placing pile
-            (self.stackingPiles[placingPileIndex]).insert(0, self.placePile.pop(0))
+            (self.postPiles[placingPileIndex]).insert(0, self.woodPile.pop(0))
             # removes the "top" element from the grabbing pile
 
     # parameters:
@@ -140,17 +140,17 @@ class Player():
     def playResultForStackPile(self, condition, board, gamePileNum, grabbingPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.cardPiles[gamePileNum].insert(0, self.stackingPiles[grabbingPileIndex][0])
+            board.cardPiles[gamePileNum].insert(0, self.postPiles[grabbingPileIndex][0])
             # removes the card from the stackPile
-            self.stackingPiles[grabbingPileIndex].pop(0)
-            if len(self.stackingPiles[grabbingPileIndex]) == 0:
+            self.postPiles[grabbingPileIndex].pop(0)
+            if len(self.postPiles[grabbingPileIndex]) == 0:
                 if len(self.blitzPile) > 0:
-                    (self.stackingPiles[grabbingPileIndex]).insert(0, self.blitzPile.pop(0))
+                    (self.postPiles[grabbingPileIndex]).insert(0, self.blitzPile.pop(0))
 
-    def playResultForPlacePile(self, condition, board, gamePileNum):
+    def playResultForWoodPile(self, condition, board, gamePileNum):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.cardPiles[gamePileNum].insert(0, self.placePile.pop(0))
+            board.cardPiles[gamePileNum].insert(0, self.woodPile.pop(0))
             # removes the card from the stackPile
 
     def playResultForBlitzPile(self, condition, board, gamePileNum):
@@ -160,17 +160,17 @@ class Player():
             # removes the card from the stackPile
 
     # Flips 3 Cards from player deck and puts them in place pile
-    def flipPlacePile(self):
+    def flipWoodPile(self):
         if len(self.deck) < 1:
-            self.deck = self.placePile
+            self.deck = self.woodPile
             self.deck.reverse()
-            self.placePile = []
+            self.woodPile = []
         if len(self.deck) < 3:
             for i in range(len(self.deck)):
-                self.placePile.insert(0, self.deck.pop(0))
+                self.woodPile.insert(0, self.deck.pop(0))
         else:
             for i in range(3):
-                self.placePile.insert(0, self.deck.pop(0))
+                self.woodPile.insert(0, self.deck.pop(0))
 
     def displayScore(self, screen):
         text = self.font.render(str(len(self.blitzPile)), True, (0, 0, 0))
