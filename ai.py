@@ -3,116 +3,70 @@ import random
 import pygame
 from constants import *
 
-
 class AI(Player):
     def __init__(self, playerNum):
         super().__init__(playerNum)
-        self.blitzTimeDelay = 0
-        self.placeTimeDelay = 0
-        self.stackTimeDelay = 0
-        self.blitzPlaceAttempt = False
-        self.stackingPilePlaceAttempt = False
-        self.placePilePlaceAttempt = False
+        self.timeDelay = 0
+        self.waitTime = 0
         self.index = -1
         self.indexB = -1
         self.indices = (-1, -1)
         self.diffLevel = 1
-        self.waitTime = 0
+        self.blitzPlaceAttempt = False
+        self.stackingPilePlaceAttempt = False
+        self.placePilePlaceAttempt = False
 
-
+    def attemptPlacement(self, board, indexToPlace, cardSource, indexList, playResult):
+        if indexToPlace == -1:
+            random.shuffle(indexList)
+            for x in indexList:
+                if len(cardSource) > 0 and self.playAttempt(board, x, cardSource[0]):
+                    self.score -= 1
+                    self.timeDelay = pygame.time.get_ticks()
+                    self.waitTime = self.AIwaitTime()
+                    return x
+            return -1
+        elif indexToPlace != -1 and pygame.time.get_ticks() > self.timeDelay + self.waitTime:
+            if self.playAttempt(board, indexToPlace, cardSource[0]):
+                playResult(True, board, indexToPlace)
+            else:
+                self.score -= 1
+            return -1
+        return indexToPlace
 
     def blitzPilePlayAttempt(self, board, indexToPlace):
-        #if there is no attempt to place, check for one
-        if indexToPlace == -1:
-            indexList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-            random.shuffle(indexList)
-            for x in indexList:
-                if len(self.blitzPile) > 0 and self.playAttempt(board, x, self.blitzPile[0]):
-                    # because the score cannot be incremented until card actually placed
-                    self.score = self.score - 1
-                    self.blitzTimeDelay = pygame.time.get_ticks()
-                    self.waitTime = self.AIwaitTime()
-                    return x
-            return -1
-
-        #if there was an attempt to place, and there has been a long enough time delay, and if the current play attempt is valid
-        elif indexToPlace != -1 and pygame.time.get_ticks() > self.blitzTimeDelay + self.waitTime:
-                if self.playAttempt(board, indexToPlace, self.blitzPile[0]):
-                    self.playResultForBlitzPile(True, board, indexToPlace)
-                #if current play attempt was not valid
-                else:
-                    self.score = self.score - 1
-                return -1
-
-        #if there was an attempt to place but not enough time has passed
-        return indexToPlace
+        indexList = list(range(12))
+        return self.attemptPlacement(board, indexToPlace, self.blitzPile, indexList, self.playResultForBlitzPile)
 
     def placePilePlayAttempt(self, board, indexToPlace):
-        # if there is no attempt to place, check for one
-        if indexToPlace == -1:
-            indexList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-            random.shuffle(indexList)
-            for x in indexList:
-                if len(self.placePile) > 0 and self.playAttempt(board, x, self.placePile[0]):
-                    # because the score cannot be incremented until card actually placed
-                    self.score = self.score - 1
-                    self.placeTimeDelay = pygame.time.get_ticks()
-                    self.waitTime = self.AIwaitTime()
-                    return x
-            return -1
-
-        # if there was an attempt to place, and there has been a long enough time delay, and if the current play attempt is valid
-        elif indexToPlace != -1 and pygame.time.get_ticks() > self.placeTimeDelay + self.waitTime:
-            if self.playAttempt(board, indexToPlace, self.placePile[0]):
-                self.playResultForPlacePile(True, board, indexToPlace)
-            # if current play attempt was not valid
-            else:
-                self.score = self.score - 1
-            return -1
-
-        # if there was an attempt to place but not enough time has passed
-        return indexToPlace
+        indexList = list(range(12))
+        return self.attemptPlacement(board, indexToPlace, self.placePile, indexList, self.playResultForPlacePile)
 
     def stackingPilesPlayAttempt(self, board, indexToPlace, stackPileIndex):
-        # if there is no attempt to place, check for one
-        if indexToPlace == -1:
-            for q in range(3):
-                indexList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-                random.shuffle(indexList)
-                for x in indexList:
-                    if len(self.stackingPiles[q]) > 0 and self.playAttempt(board, x, self.stackingPiles[q][0]):
-                        # because the score cannot be incremented until card actually placed
-                        self.score = self.score - 1
-                        self.stackTimeDelay = pygame.time.get_ticks()
-                        self.waitTime = self.AIwaitTime()
-                        return x, q
+        if stackPileIndex == -1:
+            stackPileList = list(range(3))
+            random.shuffle(stackPileList)
+            for y in stackPileList:
+                if len(self.stackingPiles[y]) > 0:
+                    self.index = self.attemptPlacement(board, indexToPlace, self.stackingPiles[y], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, y))
+                    if self.index != -1:
+                        return self.index, y
             return -1, -1
-
-        # if there was an attempt to place, and there has been a long enough time delay, and if the current play attempt is valid
-        elif indexToPlace != -1 and pygame.time.get_ticks() > self.stackTimeDelay + self.waitTime:
-            if self.playAttempt(board, indexToPlace, self.stackingPiles[stackPileIndex][0]):
-                self.playResultForStackPile(True, board, indexToPlace, stackPileIndex)
-            # if current play attempt was not valid
-            else:
-                self.score = self.score - 1
-            return -1, -1
-
-        # if there was an attempt to place but not enough time has passed
+        elif stackPileIndex != -1 and pygame.time.get_ticks() > self.timeDelay + self.waitTime:
+            if self.attemptPlacement(board, indexToPlace, self.stackingPiles[stackPileIndex], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, stackPileIndex)) == -1:
+                return -1, -1
         return indexToPlace, stackPileIndex
 
-
-
     def playCards(self, board):
-
-        if self.blitzPlaceAttempt == False and self.stackingPilePlaceAttempt == False and self.placePilePlaceAttempt == False:
+        if not self.blitzPlaceAttempt and not self.stackingPilePlaceAttempt and not self.placePilePlaceAttempt:
             self.index = self.blitzPilePlayAttempt(board, -1)
             if self.index != -1:
                 self.blitzPlaceAttempt = True
-        if self.blitzPlaceAttempt == False and self.stackingPilePlaceAttempt == False and self.placePilePlaceAttempt == False:
+        if not self.blitzPlaceAttempt and not self.stackingPilePlaceAttempt and not self.placePilePlaceAttempt:
             self.indices = self.stackingPilesPlayAttempt(board, -1, -1)
             if self.indices != (-1, -1):
                 self.stackingPilePlaceAttempt = True
-        if self.blitzPlaceAttempt == False and self.stackingPilePlaceAttempt == False and self.placePilePlaceAttempt == False:
+        if not self.blitzPlaceAttempt and not self.stackingPilePlaceAttempt and not self.placePilePlaceAttempt:
             self.indexB = self.placePilePlayAttempt(board, -1)
             if self.indexB != -1:
                 self.placePilePlaceAttempt = True
@@ -132,9 +86,3 @@ class AI(Player):
 
     def AIwaitTime(self):
         return random.randrange(DIFF_LEVELS[self.diffLevel][0], DIFF_LEVELS[self.diffLevel][1])
-
-
-
-
-
-
