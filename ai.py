@@ -21,7 +21,7 @@ class AI(Player):
             random.shuffle(indexList)
             for x in indexList:
                 if len(cardSource) > 0 and self.playAttempt(board, x, cardSource[0]):
-                    self.score -= 1
+                    self.score = max(0, self.score - 1)
                     self.timeDelay = pygame.time.get_ticks()
                     self.waitTime = self.AIwaitTime()
                     return x
@@ -30,7 +30,7 @@ class AI(Player):
             if self.playAttempt(board, indexToPlace, cardSource[0]):
                 playResult(True, board, indexToPlace)
             else:
-                self.score -= 1
+                self.score = max(0, self.score - 1)
             return -1
         return indexToPlace
 
