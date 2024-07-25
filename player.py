@@ -81,82 +81,82 @@ class Player():
 
     # returns true if the card attempted to stack is opposite gender and descending
     # number from the stack pile
-    def stackAttempt(self, cardToStack, cardToBePlacedOn):
-        if cardToBePlacedOn.gender != (cardToStack.gender):
-            if cardToBePlacedOn.number == (cardToStack.number - 1):
+    def postAttempt(self, card, cardToStack):
+        if cardToStack.gender != (card.gender):
+            if cardToStack.number == (card.number - 1):
                 return True
         return False
 
-    def stackResultForStackPile(self, condition, grabbingPileIndex, placingPileIndex):
+    def postResultForPostPile(self, condition, postPileIndexFrom, postPileIndexTo):
         # if the stack is valid
         if condition:
             # inserts the top card from the grabbing pile into the placing pile
-            (self.postPiles[placingPileIndex]).insert(0, self.postPiles[grabbingPileIndex][0])
+            (self.postPiles[postPileIndexTo]).insert(0, self.postPiles[postPileIndexFrom][0])
             # removes the "top" element from the grabbing pile
-            self.postPiles[grabbingPileIndex].pop(0)
+            self.postPiles[postPileIndexFrom].pop(0)
 
             # if the pile that was grabbed from is empty, replace with a card from the blitz pile
-            if len(self.postPiles[grabbingPileIndex]) == 0:
-                (self.postPiles[grabbingPileIndex]).insert(0, self.blitzPile[0])
+            if len(self.postPiles[postPileIndexFrom]) == 0:
+                (self.postPiles[postPileIndexFrom]).insert(0, self.blitzPile[0])
                 self.blitzPile.pop(0)
 
-    def stackResultForBlitzPile(self, condition, placingPileIndex):
+    def postResultForBlitzPile(self, condition, postPileIndex):
         # if the stack is valid
         if condition:
             # inserts the top card from the grabbing pile into the placing pile
-            (self.postPiles[placingPileIndex]).insert(0, self.blitzPile[0])
+            (self.postPiles[postPileIndex]).insert(0, self.blitzPile[0])
             # removes the "top" element from the grabbing pile
             self.blitzPile.pop(0)
 
-    def stackResultForPlacePile(self, condition, placingPileIndex):
+    def postResultForWoodPile(self, condition, postPileIndex):
         # if the stack is valid
         if condition:
             # inserts the top card from the grabbing pile into the placing pile
-            (self.postPiles[placingPileIndex]).insert(0, self.woodPile.pop(0))
+            (self.postPiles[postPileIndex]).insert(0, self.woodPile.pop(0))
             # removes the "top" element from the grabbing pile
 
     # parameters:
     # stackingPileNum: which stacking pile that the card was taken from
     # gamePileNum: The pile that you are trying to place the card on top of (to gain a point)
-    def playAttempt(self, board, gamePileNum, cardToPlay):
+    def playAttempt(self, board, dutchPileIndex, cardToPlay):
         # self.stackingPiles[stackingPileNum][0] is the card at top of stacking pile
         if (cardToPlay.number == 1):
             # if you are trying to place the card on an empty spot in the game board
-            if len(board.dutchPiles[gamePileNum]) == 0:
+            if len(board.dutchPiles[dutchPileIndex]) == 0:
                 self.score = self.score + 1
                 return True
         # if you try to place a card thats not 0 on an empty pile
-        elif len(board.dutchPiles[gamePileNum]) == 0:
+        elif len(board.dutchPiles[dutchPileIndex]) == 0:
             return False
         # if the color of the cards are the same
-        elif cardToPlay.color == board.dutchPiles[gamePileNum][0].color:
+        elif cardToPlay.color == board.dutchPiles[dutchPileIndex][0].color:
             # if the number is one greater than the card you are placing on
-            if cardToPlay.number == ((board.dutchPiles[gamePileNum][0].number) + 1):
+            if cardToPlay.number == ((board.dutchPiles[dutchPileIndex][0].number) + 1):
                 self.score = self.score + 1
                 return True
 
         return False
 
-    def playResultForStackPile(self, condition, board, gamePileNum, grabbingPileIndex):
+    def playResultForPostPile(self, condition, board, dutchPileIndex, postPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.dutchPiles[gamePileNum].insert(0, self.postPiles[grabbingPileIndex][0])
+            board.dutchPiles[dutchPileIndex].insert(0, self.postPiles[postPileIndex][0])
             # removes the card from the stackPile
-            self.postPiles[grabbingPileIndex].pop(0)
-            if len(self.postPiles[grabbingPileIndex]) == 0:
+            self.postPiles[postPileIndex].pop(0)
+            if len(self.postPiles[postPileIndex]) == 0:
                 if len(self.blitzPile) > 0:
-                    (self.postPiles[grabbingPileIndex]).insert(0, self.blitzPile.pop(0))
+                    (self.postPiles[postPileIndex]).insert(0, self.blitzPile.pop(0))
 
-    def playResultForWoodPile(self, condition, board, gamePileNum):
+    def playResultForWoodPile(self, condition, board, dutchPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.dutchPiles[gamePileNum].insert(0, self.woodPile.pop(0))
+            board.dutchPiles[dutchPileIndex].insert(0, self.woodPile.pop(0))
             # removes the card from the stackPile
 
-    def playResultForBlitzPile(self, condition, board, gamePileNum):
+    def playResultForBlitzPile(self, condition, board, dutchPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.dutchPiles[gamePileNum].insert(0, self.blitzPile.pop(0))
+            board.dutchPiles[dutchPileIndex].insert(0, self.blitzPile.pop(0))
             # removes the card from the stackPile
 
     # Flips 3 Cards from player deck and puts them in place pile

@@ -163,8 +163,8 @@ def main():
                 # if the play attempt is valid
                 if player1.playAttempt(board[darkOrLightState], placeDownPosIndex, player1.selectedCard):
                     if player1.selectedCardIndexOnGameBoard in range(2, 5):
-                        player1.playResultForStackPile(True, board[darkOrLightState], placeDownPosIndex,
-                                                       (player1.selectedCardIndexOnGameBoard - 2))
+                        player1.playResultForPostPile(True, board[darkOrLightState], placeDownPosIndex,
+                                                      (player1.selectedCardIndexOnGameBoard - 2))
                     if player1.selectedCardIndexOnGameBoard == 0:
                         player1.playResultForWoodPile(True, board[darkOrLightState], placeDownPosIndex)
                     if player1.selectedCardIndexOnGameBoard == 1:
@@ -176,14 +176,14 @@ def main():
 
             # if hovering over cards in the stacking pile
             elif stackingPosIndex in range(2, 5):
-                if player1.stackAttempt(player1.postPiles[stackingPosIndex - 2][0], player1.selectedCard):
+                if player1.postAttempt(player1.postPiles[stackingPosIndex - 2][0], player1.selectedCard):
                     if player1.selectedCardIndexOnGameBoard in range(2, 5):
-                        player1.stackResultForStackPile(True, player1.selectedCardIndexOnGameBoard - 2,
-                                                        stackingPosIndex - 2)
+                        player1.postResultForPostPile(True, player1.selectedCardIndexOnGameBoard - 2,
+                                                      stackingPosIndex - 2)
                     if player1.selectedCardIndexOnGameBoard == 0:
-                        player1.stackResultForPlacePile(True, stackingPosIndex - 2)
+                        player1.postResultForWoodPile(True, stackingPosIndex - 2)
                     if player1.selectedCardIndexOnGameBoard == 1:
-                        player1.stackResultForBlitzPile(True, stackingPosIndex - 2)
+                        player1.postResultForBlitzPile(True, stackingPosIndex - 2)
                     sound.cardPlace.play()
                     player1.selectedCardIndexOnGameBoard = -1
                     player1.cardSelected = False
