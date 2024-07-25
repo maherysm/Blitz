@@ -137,15 +137,15 @@ class Player():
 
         return False
 
-    def playResultForPostPile(self, condition, board, gamePileNum, grabbingPileIndex):
+    def playResultForPostPile(self, condition, board, dutchPileIndex, postPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.dutchPiles[gamePileNum].insert(0, self.postPiles[grabbingPileIndex][0])
+            board.dutchPiles[dutchPileIndex].insert(0, self.postPiles[postPileIndex][0])
             # removes the card from the stackPile
-            self.postPiles[grabbingPileIndex].pop(0)
-            if len(self.postPiles[grabbingPileIndex]) == 0:
+            self.postPiles[postPileIndex].pop(0)
+            if len(self.postPiles[postPileIndex]) == 0:
                 if len(self.blitzPile) > 0:
-                    (self.postPiles[grabbingPileIndex]).insert(0, self.blitzPile.pop(0))
+                    (self.postPiles[postPileIndex]).insert(0, self.blitzPile.pop(0))
 
     def playResultForWoodPile(self, condition, board, gamePileNum):
         if condition:

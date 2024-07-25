@@ -34,28 +34,28 @@ class AI(Player):
             return -1
         return indexToPlace
 
-    def blitzPilePlayAttempt(self, board, indexToPlace):
+    def blitzPilePlayAttempt(self, board, dutchPileIndex):
         indexList = list(range(12))
-        return self.attemptPlacement(board, indexToPlace, self.blitzPile, indexList, self.playResultForBlitzPile)
+        return self.attemptPlacement(board, dutchPileIndex, self.blitzPile, indexList, self.playResultForBlitzPile)
 
-    def woodPilePlayAttempt(self, board, indexToPlace):
+    def woodPilePlayAttempt(self, board, dutchPileIndex):
         indexList = list(range(12))
-        return self.attemptPlacement(board, indexToPlace, self.woodPile, indexList, self.playResultForWoodPile)
+        return self.attemptPlacement(board, dutchPileIndex, self.woodPile, indexList, self.playResultForWoodPile)
 
-    def postPilesPlayAttempt(self, board, indexToPlace, stackPileIndex):
-        if stackPileIndex == -1:
+    def postPilesPlayAttempt(self, board, dutchPileIndex, postPileIndex):
+        if postPileIndex == -1:
             stackPileList = list(range(3))
             random.shuffle(stackPileList)
             for y in stackPileList:
                 if len(self.postPiles[y]) > 0:
-                    self.index = self.attemptPlacement(board, indexToPlace, self.postPiles[y], list(range(12)), lambda res, b, i: self.playResultForPostPile(res, b, i, y))
+                    self.index = self.attemptPlacement(board, dutchPileIndex, self.postPiles[y], list(range(12)), lambda res, b, i: self.playResultForPostPile(res, b, i, y))
                     if self.index != -1:
                         return self.index, y
             return -1, -1
-        elif stackPileIndex != -1 and pygame.time.get_ticks() > self.timeDelay + self.waitTime:
-            if self.attemptPlacement(board, indexToPlace, self.postPiles[stackPileIndex], list(range(12)), lambda res, b, i: self.playResultForPostPile(res, b, i, stackPileIndex)) == -1:
+        elif postPileIndex != -1 and pygame.time.get_ticks() > self.timeDelay + self.waitTime:
+            if self.attemptPlacement(board, dutchPileIndex, self.postPiles[postPileIndex], list(range(12)), lambda res, b, i: self.playResultForPostPile(res, b, i, postPileIndex)) == -1:
                 return -1, -1
-        return indexToPlace, stackPileIndex
+        return dutchPileIndex, postPileIndex
 
     def playCards(self, board):
         if not self.blitzPlaceAttempt and not self.postPilePlaceAttempt and not self.woodPilePlaceAttempt:
