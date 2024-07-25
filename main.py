@@ -204,7 +204,7 @@ def main():
         player4.playCards(board[darkOrLightState])
 
         # checks for and removes piles of 10 from the game board
-        board[darkOrLightState].checkForPilesToRemove()
+        board[darkOrLightState].checkForDutchPilesToRemove()
 
         pygame.display.update()
 
