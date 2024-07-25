@@ -13,8 +13,8 @@ class AI(Player):
         self.indices = (-1, -1)
         self.diffLevel = 1
         self.blitzPlaceAttempt = False
-        self.stackingPilePlaceAttempt = False
-        self.placePilePlaceAttempt = False
+        self.postPilePlaceAttempt = False
+        self.woodPilePlaceAttempt = False
 
     def attemptPlacement(self, board, indexToPlace, cardSource, indexList, playResult):
         if indexToPlace == -1:
@@ -38,11 +38,11 @@ class AI(Player):
         indexList = list(range(12))
         return self.attemptPlacement(board, indexToPlace, self.blitzPile, indexList, self.playResultForBlitzPile)
 
-    def placePilePlayAttempt(self, board, indexToPlace):
+    def woodPilePlayAttempt(self, board, indexToPlace):
         indexList = list(range(12))
         return self.attemptPlacement(board, indexToPlace, self.woodPile, indexList, self.playResultForWoodPile)
 
-    def stackingPilesPlayAttempt(self, board, indexToPlace, stackPileIndex):
+    def postPilesPlayAttempt(self, board, indexToPlace, stackPileIndex):
         if stackPileIndex == -1:
             stackPileList = list(range(3))
             random.shuffle(stackPileList)
@@ -58,31 +58,31 @@ class AI(Player):
         return indexToPlace, stackPileIndex
 
     def playCards(self, board):
-        if not self.blitzPlaceAttempt and not self.stackingPilePlaceAttempt and not self.placePilePlaceAttempt:
+        if not self.blitzPlaceAttempt and not self.postPilePlaceAttempt and not self.woodPilePlaceAttempt:
             self.index = self.blitzPilePlayAttempt(board, -1)
             if self.index != -1:
                 self.blitzPlaceAttempt = True
-        if not self.blitzPlaceAttempt and not self.stackingPilePlaceAttempt and not self.placePilePlaceAttempt:
-            self.indices = self.stackingPilesPlayAttempt(board, -1, -1)
+        if not self.blitzPlaceAttempt and not self.postPilePlaceAttempt and not self.woodPilePlaceAttempt:
+            self.indices = self.postPilesPlayAttempt(board, -1, -1)
             if self.indices != (-1, -1):
-                self.stackingPilePlaceAttempt = True
-        if not self.blitzPlaceAttempt and not self.stackingPilePlaceAttempt and not self.placePilePlaceAttempt:
-            self.indexB = self.placePilePlayAttempt(board, -1)
+                self.postPilePlaceAttempt = True
+        if not self.blitzPlaceAttempt and not self.postPilePlaceAttempt and not self.woodPilePlaceAttempt:
+            self.indexB = self.woodPilePlayAttempt(board, -1)
             if self.indexB != -1:
-                self.placePilePlaceAttempt = True
+                self.woodPilePlaceAttempt = True
 
         if self.blitzPlaceAttempt:
             if self.blitzPilePlayAttempt(board, self.index) == -1:
                 self.index = -1
                 self.blitzPlaceAttempt = False
-        elif self.stackingPilePlaceAttempt:
-            self.indices = self.stackingPilesPlayAttempt(board, self.indices[0], self.indices[1])
+        elif self.postPilePlaceAttempt:
+            self.indices = self.postPilesPlayAttempt(board, self.indices[0], self.indices[1])
             if self.indices[0] == -1:
-                self.stackingPilePlaceAttempt = False
-        elif self.placePilePlaceAttempt:
-            self.indexB = self.placePilePlayAttempt(board, self.indexB)
+                self.postPilePlaceAttempt = False
+        elif self.woodPilePlaceAttempt:
+            self.indexB = self.woodPilePlayAttempt(board, self.indexB)
             if self.indexB == -1:
-                self.placePilePlaceAttempt = False
+                self.woodPilePlaceAttempt = False
 
     def AIwaitTime(self):
         return random.randrange(DIFF_LEVELS[self.diffLevel][0], DIFF_LEVELS[self.diffLevel][1])
