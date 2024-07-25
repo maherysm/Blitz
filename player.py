@@ -161,16 +161,16 @@ class Player():
 
     # Flips 3 Cards from player deck and puts them in place pile
     def flipWoodPile(self):
-        if len(self.deck) < 1:
-            self.deck = self.woodPile
-            self.deck.reverse()
-            self.woodPile = []
+
+        # if the deck as less than 3 cards, flip the wood pile, and put it at the bottom of the deck
         if len(self.deck) < 3:
-            for i in range(len(self.deck)):
-                self.woodPile.insert(0, self.deck.pop(0))
-        else:
-            for i in range(3):
-                self.woodPile.insert(0, self.deck.pop(0))
+            self.woodPile.reverse()
+            for i in range(len(self.woodPile)):
+                self.deck.append(self.woodPile.pop(0))
+
+        # if the deck has at least 3 cards, flip them in the wood pile
+        for i in range(3):
+            self.woodPile.insert(0, self.deck.pop(0))
 
     def displayScore(self, screen):
         text = self.font.render(str(len(self.blitzPile)), True, (0, 0, 0))
