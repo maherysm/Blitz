@@ -122,16 +122,16 @@ class Player():
         # self.stackingPiles[stackingPileNum][0] is the card at top of stacking pile
         if (cardToPlay.number == 1):
             # if you are trying to place the card on an empty spot in the game board
-            if len(board.cardPiles[gamePileNum]) == 0:
+            if len(board.dutchPiles[gamePileNum]) == 0:
                 self.score = self.score + 1
                 return True
         # if you try to place a card thats not 0 on an empty pile
-        elif len(board.cardPiles[gamePileNum]) == 0:
+        elif len(board.dutchPiles[gamePileNum]) == 0:
             return False
         # if the color of the cards are the same
-        elif cardToPlay.color == board.cardPiles[gamePileNum][0].color:
+        elif cardToPlay.color == board.dutchPiles[gamePileNum][0].color:
             # if the number is one greater than the card you are placing on
-            if cardToPlay.number == ((board.cardPiles[gamePileNum][0].number) + 1):
+            if cardToPlay.number == ((board.dutchPiles[gamePileNum][0].number) + 1):
                 self.score = self.score + 1
                 return True
 
@@ -140,7 +140,7 @@ class Player():
     def playResultForStackPile(self, condition, board, gamePileNum, grabbingPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.cardPiles[gamePileNum].insert(0, self.postPiles[grabbingPileIndex][0])
+            board.dutchPiles[gamePileNum].insert(0, self.postPiles[grabbingPileIndex][0])
             # removes the card from the stackPile
             self.postPiles[grabbingPileIndex].pop(0)
             if len(self.postPiles[grabbingPileIndex]) == 0:
@@ -150,13 +150,13 @@ class Player():
     def playResultForWoodPile(self, condition, board, gamePileNum):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.cardPiles[gamePileNum].insert(0, self.woodPile.pop(0))
+            board.dutchPiles[gamePileNum].insert(0, self.woodPile.pop(0))
             # removes the card from the stackPile
 
     def playResultForBlitzPile(self, condition, board, gamePileNum):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
-            board.cardPiles[gamePileNum].insert(0, self.blitzPile.pop(0))
+            board.dutchPiles[gamePileNum].insert(0, self.blitzPile.pop(0))
             # removes the card from the stackPile
 
     # Flips 3 Cards from player deck and puts them in place pile
