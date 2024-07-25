@@ -228,11 +228,6 @@ def main():
         player3.displayScore(screen)
         player4.displayScore(screen)
 
-        print(player1.score - 2 * len(player1.blitzPile))
-        print(player2.score - 2 * len(player2.blitzPile))
-        print(player3.score - 2 * len(player3.blitzPile))
-        print(player4.score - 2 * len(player4.blitzPile))
-
         if player1.score - 2 * len(player1.blitzPile) >= player2.score - 2 * len(player2.blitzPile) \
                 and player1.score - 2 * len(player1.blitzPile) >= player3.score - 2 * len(player3.blitzPile) \
                 and player1.score - 2 * len(player1.blitzPile) >= player4.score - 2 * len(player4.blitzPile):
