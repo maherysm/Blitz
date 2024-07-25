@@ -228,9 +228,14 @@ def main():
         player3.displayScore(screen)
         player4.displayScore(screen)
 
-        if player1.score - len(player1.blitzPile) >= player2.score - len(player2.blitzPile) \
-                and player1.score - len(player1.blitzPile) >= player3.score - len(player3.blitzPile) \
-                and player1.score - len(player1.blitzPile) >= player4.score - len(player4.blitzPile):
+        print(player1.score - 2 * len(player1.blitzPile))
+        print(player2.score - 2 * len(player2.blitzPile))
+        print(player3.score - 2 * len(player3.blitzPile))
+        print(player4.score - 2 * len(player4.blitzPile))
+
+        if player1.score - 2 * len(player1.blitzPile) >= player2.score - 2 * len(player2.blitzPile) \
+                and player1.score - 2 * len(player1.blitzPile) >= player3.score - 2 * len(player3.blitzPile) \
+                and player1.score - 2 * len(player1.blitzPile) >= player4.score - 2 * len(player4.blitzPile):
 
             screen.blit(winImage, END_MESSAGE_COORDS)
             player1.displayScore(screen)
