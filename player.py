@@ -137,7 +137,7 @@ class Player():
 
         return False
 
-    def playResultForStackPile(self, condition, board, gamePileNum, grabbingPileIndex):
+    def playResultForPostPile(self, condition, board, gamePileNum, grabbingPileIndex):
         if condition:
             # inserts the card onto the spot on the gameboard that was attempted
             board.dutchPiles[gamePileNum].insert(0, self.postPiles[grabbingPileIndex][0])
