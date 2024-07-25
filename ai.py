@@ -48,12 +48,12 @@ class AI(Player):
             random.shuffle(stackPileList)
             for y in stackPileList:
                 if len(self.postPiles[y]) > 0:
-                    self.index = self.attemptPlacement(board, indexToPlace, self.postPiles[y], list(range(12)), lambda res, b, i: self.playResultForPostPile(res, b, i, y))
+                    self.index = self.attemptPlacement(board, indexToPlace, self.postPiles[y], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, y))
                     if self.index != -1:
                         return self.index, y
             return -1, -1
         elif stackPileIndex != -1 and pygame.time.get_ticks() > self.timeDelay + self.waitTime:
-            if self.attemptPlacement(board, indexToPlace, self.postPiles[stackPileIndex], list(range(12)), lambda res, b, i: self.playResultForPostPile(res, b, i, stackPileIndex)) == -1:
+            if self.attemptPlacement(board, indexToPlace, self.postPiles[stackPileIndex], list(range(12)), lambda res, b, i: self.playResultForStackPile(res, b, i, stackPileIndex)) == -1:
                 return -1, -1
         return indexToPlace, stackPileIndex
 
