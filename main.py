@@ -147,9 +147,7 @@ def main():
                 screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
                 pygame.display.update()
                 player1.flipWoodPile()
-                player2.flipWoodPile()
-                player3.flipWoodPile()
-                player4.flipWoodPile()
+
 
         # if the mouse is clicked and a card is selected, it will try to place the card down
         if controls.leftButtonClick() and player1.cardSelected:
@@ -202,6 +200,19 @@ def main():
         player2.playCards(board[darkOrLightState])
         player3.playCards(board[darkOrLightState])
         player4.playCards(board[darkOrLightState])
+
+        if pygame.time.get_ticks() - player2.timeDelay > player2.waitTime:
+            player2.flipWoodPile()
+            player2.timeDelay = pygame.time.get_ticks()
+
+        if pygame.time.get_ticks() - player3.timeDelay > player3.waitTime:
+            player3.flipWoodPile()
+            player3.timeDelay = pygame.time.get_ticks()
+
+        if pygame.time.get_ticks() - player4.timeDelay > player4.waitTime:
+            player4.flipWoodPile()
+            player4.timeDelay = pygame.time.get_ticks()
+
 
         # checks for and removes piles of 10 from the game board
         board[darkOrLightState].checkForDutchPilesToRemove()
