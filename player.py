@@ -46,27 +46,27 @@ class Player():
         #if the below 5 cards exist, they will be printed to the screen in their designated locations, but only after
         #they are rotated the correct amount for each player
         if self.woodPile:
-            screen.blit(pygame.transform.rotate(self.woodPile[0].image, self.rotationDirection), pileIndex[0])
+            screen.blit(pygame.transform.rotate(self.woodPile[0].image, self.rotationDirection), pileIndex[4])
         if self.blitzPile:
-            screen.blit(pygame.transform.rotate(self.blitzPile[0].image, self.rotationDirection), pileIndex[1])
+            screen.blit(pygame.transform.rotate(self.blitzPile[0].image, self.rotationDirection), pileIndex[3])
         if self.postPiles[0]:
-            screen.blit(pygame.transform.rotate(self.postPiles[0][0].image, self.rotationDirection), pileIndex[2])
+            screen.blit(pygame.transform.rotate(self.postPiles[0][0].image, self.rotationDirection), pileIndex[0])
         if self.postPiles[1]:
-            screen.blit(pygame.transform.rotate(self.postPiles[1][0].image, self.rotationDirection), pileIndex[3])
+            screen.blit(pygame.transform.rotate(self.postPiles[1][0].image, self.rotationDirection), pileIndex[1])
         if self.postPiles[2]:
-            screen.blit(pygame.transform.rotate(self.postPiles[2][0].image, self.rotationDirection), pileIndex[4])
+            screen.blit(pygame.transform.rotate(self.postPiles[2][0].image, self.rotationDirection), pileIndex[2])
 
     # given the index, returns a card object if it is there. Otherwise, dont return anything
     def findSelectedCard(self, pileIndex):
-        if pileIndex == 0:
+        if pileIndex == 4:
             if len(self.woodPile) > 0:
                 return self.woodPile[0]
-        if pileIndex == 1:
+        if pileIndex == 3:
             if len(self.blitzPile) > 0:
                 return self.blitzPile[0]
-        if pileIndex in range(2, 5):
-            if len(self.postPiles[pileIndex - 2]) > 0:
-                return self.postPiles[pileIndex - 2][0]
+        if pileIndex in range(0, 3):
+            if len(self.postPiles[pileIndex]) > 0:
+                return self.postPiles[pileIndex][0]
 
     def shuffleDeck(self):
         random.shuffle(self.deck)
