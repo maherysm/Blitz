@@ -3,7 +3,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
 
-GAME_BOARD_IMAGES = ["board_light.png", "board_v3_b.png"]
+GAME_BOARD_IMAGES = ["board.png", "board_v3_b.png"]
 TITLE_SCREEN = "images/title_screen.png"
 END_SCREENS = ["notification_win.png", "notification_lose.png"]
 READY_BUTTON = "ready_button_a.png"
@@ -46,7 +46,7 @@ MULTI_BUTTON_CLICKED = "images/buttons/btn_mp_c.png"
 
 
 
-P1_CARD_COORDS = [(195, 601), (280, 601) , (363, 601) , (445, 601) , (527, 601)]
+P1_CARD_COORDS = [(195, 601), (280, 601) , (363, 601) , (445, 601) , (526, 601)]
 P2_CARD_COORDS = [(526, 8), (445, 8) , (363, 8) , (280, 8) , (195, 8)]
 P3_CARD_COORDS = [(14, 147), (14, 229) , (14, 311) , (14, 393) , (14, 475)]
 P4_CARD_COORDS = [(665, 475), (665, 393) , (665, 311) , (665, 229) , (665, 147)]
