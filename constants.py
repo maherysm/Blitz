@@ -83,4 +83,4 @@ CARD_SIZE_X = 74
 CARD_SIZE_Y = 108
 
 #index is the difficulty level, elements are the min and max of how many milliseconds to place down card
-DIFF_LEVELS = [[0,0], [3000, 5000]]
+DIFF_LEVELS = [[0,0], [2000, 4000]]
