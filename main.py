@@ -221,21 +221,12 @@ def end(screen, sound, board, player1, player2, player3, player4, controls):
     return True
 
 
-
 def main():
-    #0 is for light mode, 1 is for dark mode
-
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
     pygame.display.set_caption("BlitzOn!")
-
     runTitleScreen = True
-
     controls = Controls()
-
     clock = pygame.time.Clock()
-
-    darkOrLightState = 0
 
     while runTitleScreen:
         for event in pygame.event.get():
@@ -245,8 +236,6 @@ def main():
         clock.tick(60)
         screen.blit(titleImage, (0, 0))
         screen.blit(playButtonImage, PLAY_BUTTON_COORDS)
-
-
 
         if controls.leftButtonClick():
             mousePos = controls.getMousePos()
