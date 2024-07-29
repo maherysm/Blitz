@@ -6,8 +6,8 @@ SCREEN_HEIGHT = 720
 GAME_BOARD_IMAGES = ["board.png", "board_v3_b.png"]
 TITLE_SCREEN = "images/title_screen.png"
 END_SCREENS = ["notification_win.png", "notification_lose.png"]
-READY_BUTTON = "ready_button_a.png"
-READY_BUTTON_CLICKED = "ready_button_b.png"
+FLIP_BUTTON = "wood_b.png"
+FLIP_BUTTON_CLICKED = "wood_a.png"
 BOARD_EXIT_BUTTON = "images/buttons/btn_boardexit_a.png"
 BOARD_EXIT_BUTTON_HOVER = "images/buttons/btn_boardexit_b.png"
 BOARD_EXIT_BUTTON_CLICKED = "images/buttons/btn_boardexit_c.png"
@@ -53,8 +53,8 @@ P4_CARD_COORDS = [(665, 475), (665, 393) , (665, 311) , (665, 229) , (665, 147)]
 
 PILE_CARD_COORDS = [(237, 179), (320, 179), (402, 179), (483, 179), (237, 298), (320, 298), (402, 298), (483, 298), (237, 421), (320, 421), (402, 421), (483, 421)]
 
-READY_BUTTON_COORDS = (790, 621)
-READY_BUTTON_SIZE = (354, 95)
+FLIP_BUTTON_COORDS = (668, 600)
+FLIP_BUTTON_SIZE = (120, 120)
 
 #REMOVE BELOW 4 LINES WHEN TITLE SCREEN GETS FIXED!
 PLAY_BUTTON_COORDS = (86, 441)

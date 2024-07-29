@@ -17,8 +17,8 @@ winImage = pygame.image.load(os.path.join('images', END_SCREENS[0]))
 loseImage = pygame.image.load(os.path.join('images', END_SCREENS[1]))
 playButtonImage = pygame.image.load(os.path.join('images/buttons', PLAY_BUTTON))
 playButtonClickedImage = pygame.image.load(os.path.join('images/buttons', PLAY_BUTTON_CLICKED))
-ReadyButtonImage = pygame.image.load(os.path.join('images/buttons', READY_BUTTON))
-ReadyButtonClickedImage = pygame.image.load(os.path.join('images/buttons', READY_BUTTON_CLICKED))
+FlipButtonImage = pygame.image.load(os.path.join('images/buttons', FLIP_BUTTON))
+FlipButtonClickedImage = pygame.image.load(os.path.join('images/buttons', FLIP_BUTTON_CLICKED))
 
 
 ##################################################################################
@@ -58,7 +58,7 @@ def game(screen, sound, board, player1, player2, player3, player4, controls):
         clock.tick(60)
         screen.fill((0, 0, 0))
         screen.blit(board[darkOrLightState].boardImage, (0, 0))
-        screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
+        screen.blit(FlipButtonImage, FLIP_BUTTON_COORDS)
         player1.displayPlayerCards(screen, P1_CARD_COORDS)
         player2.displayPlayerCards(screen, P2_CARD_COORDS)
         player3.displayPlayerCards(screen, P3_CARD_COORDS)
@@ -88,13 +88,13 @@ def game(screen, sound, board, player1, player2, player3, player4, controls):
                     player1.selectedCard = player1.findSelectedCard(player1.selectedCardIndexOnGameBoard)
                     player1.cardSelected = True
             # Checks to see if mouse clicked the flip button
-            elif controls.mouseInArea(mousePos, READY_BUTTON_COORDS, READY_BUTTON_SIZE):
+            elif controls.mouseInArea(mousePos, FLIP_BUTTON_COORDS, FLIP_BUTTON_SIZE):
                 sound.buttonClick.play()
 
-                screen.blit(ReadyButtonClickedImage, READY_BUTTON_COORDS)
+                screen.blit(FlipButtonClickedImage, FLIP_BUTTON_COORDS)
                 pygame.display.update()
                 pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
-                screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
+                screen.blit(FlipButtonImage, FLIP_BUTTON_COORDS)
                 pygame.display.update()
                 player1.flipWoodPile()
 
@@ -185,7 +185,7 @@ def end(screen, sound, board, player1, player2, player3, player4, controls):
     clock.tick(60)
     screen.fill((0, 0, 0))
     screen.blit(board[darkOrLightState].boardImage, (0, 0))
-    screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
+    screen.blit(FlipButtonImage, FLIP_BUTTON_COORDS)
     player1.displayPlayerCards(screen, P1_CARD_COORDS)
     player2.displayPlayerCards(screen, P2_CARD_COORDS)
     player3.displayPlayerCards(screen, P3_CARD_COORDS)
