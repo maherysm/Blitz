@@ -27,16 +27,10 @@ ReadyButtonClickedImage = pygame.image.load(os.path.join('images/buttons', READY
 
 ##################################################################################
 
-def main():
-    #0 is for light mode, 1 is for dark mode
+def start():
     darkOrLightState = 0
-
     board = [GameBoard(GAME_BOARD_IMAGES[0], SCREEN_WIDTH, SCREEN_HEIGHT),
              GameBoard(GAME_BOARD_IMAGES[1], SCREEN_WIDTH, SCREEN_HEIGHT)]
-
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-    pygame.display.set_caption("BlitzOn!")
 
     player1 = Player(1)
     player1.shuffleDeck()
@@ -55,57 +49,17 @@ def main():
     player4.shuffleDeck()
     player4.createInitialHand(board[darkOrLightState])
 
-    runTitleScreen = True
-    runGame = True
+    return board, player1, player2, player3, player4, controls
 
+
+def game(screen, sound, board, player1, player2, player3, player4, controls):
+    runGame = True
+    gameEnded = False
     clock = pygame.time.Clock()
     darkOrLightState = 0
 
-    while runTitleScreen:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                runGame = False
-                pygame.quit()
-
+    while runGame and not gameEnded:
         clock.tick(60)
-        screen.blit(titleImage, (0, 0))
-        screen.blit(playButtonImage, PLAY_BUTTON_COORDS)
-
-        if darkOrLightState == 0:
-            screen.blit(darkButtonImage, DARK_LIGHT_BUTTON_COORDS)
-        else:
-            screen.blit(lightButtonImage, DARK_LIGHT_BUTTON_COORDS)
-
-        if controls.leftButtonClick():
-            mousePos = controls.getMousePos()
-            if controls.mouseInArea(mousePos, PLAY_BUTTON_COORDS, PLAY_BUTTON_SIZE):
-                sound.buttonClick.play()
-                screen.blit(playButtonClickedImage, PLAY_BUTTON_COORDS)
-                pygame.display.update()
-                pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
-                runTitleScreen = False
-            if controls.mouseInArea(mousePos, DARK_LIGHT_BUTTON_COORDS, DARK_LIGHT_BUTTON_SIZE):
-                sound.buttonClick.play()
-                if darkOrLightState == 0:
-                    screen.blit(darkButtonClickedImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
-                    screen.blit(lightButtonImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    darkOrLightState = 1
-                else:
-                    screen.blit(lightButtonClickedImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
-                    screen.blit(darkButtonImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    darkOrLightState = 0
-
-        pygame.display.update()
-
-    while runGame:
-        clock.tick(60)
-
         screen.fill((0, 0, 0))
         screen.blit(board[darkOrLightState].boardImage, (0, 0))
         screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
@@ -147,7 +101,6 @@ def main():
                 screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
                 pygame.display.update()
                 player1.flipWoodPile()
-
 
         # if the mouse is clicked and a card is selected, it will try to place the card down
         if controls.leftButtonClick() and player1.cardSelected:
@@ -213,7 +166,6 @@ def main():
             player4.flipWoodPile()
             player4.timeDelay = pygame.time.get_ticks()
 
-
         # checks for and removes piles of 10 from the game board
         board[darkOrLightState].checkForDutchPilesToRemove()
 
@@ -222,41 +174,122 @@ def main():
         if len(player1.blitzPile) == 0 or len(player2.blitzPile) == 0 or len(player3.blitzPile) == 0 or len(
                 player4.blitzPile) == 0:
             runGame = False
+            gameEnded = True
+
+    return runGame, gameEnded
+
+
+def end(screen, sound, board, player1, player2, player3, player4, controls):
+    gameEnded = True
+    clock = pygame.time.Clock()
+    darkOrLightState = 0
 
     # Displays whether the user wins or loses based on which players blitz pile ran out first
-    while runGame == False:
-        screen.fill((0, 0, 0))
-        screen.blit(board[darkOrLightState].boardImage, (0, 0))
-        screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
-        player1.displayPlayerCards(screen, P1_CARD_COORDS)
-        player2.displayPlayerCards(screen, P2_CARD_COORDS)
-        player3.displayPlayerCards(screen, P3_CARD_COORDS)
-        player4.displayPlayerCards(screen, P4_CARD_COORDS)
-        board[darkOrLightState].displayCardPiles(screen, PILE_CARD_COORDS)
 
+    clock.tick(60)
+    screen.fill((0, 0, 0))
+    screen.blit(board[darkOrLightState].boardImage, (0, 0))
+    screen.blit(ReadyButtonImage, READY_BUTTON_COORDS)
+    player1.displayPlayerCards(screen, P1_CARD_COORDS)
+    player2.displayPlayerCards(screen, P2_CARD_COORDS)
+    player3.displayPlayerCards(screen, P3_CARD_COORDS)
+    player4.displayPlayerCards(screen, P4_CARD_COORDS)
+    board[darkOrLightState].displayCardPiles(screen, PILE_CARD_COORDS)
+
+    player1.displayScore(screen)
+    player2.displayScore(screen)
+    player3.displayScore(screen)
+    player4.displayScore(screen)
+
+    if player1.score - 2 * len(player1.blitzPile) >= player2.score - 2 * len(player2.blitzPile) \
+            and player1.score - 2 * len(player1.blitzPile) >= player3.score - 2 * len(player3.blitzPile) \
+            and player1.score - 2 * len(player1.blitzPile) >= player4.score - 2 * len(player4.blitzPile):
+
+        screen.blit(winImage, END_MESSAGE_COORDS)
         player1.displayScore(screen)
-        player2.displayScore(screen)
-        player3.displayScore(screen)
-        player4.displayScore(screen)
+        pygame.display.update()
+        sound.win.play()
 
-        if player1.score - 2 * len(player1.blitzPile) >= player2.score - 2 * len(player2.blitzPile) \
-                and player1.score - 2 * len(player1.blitzPile) >= player3.score - 2 * len(player3.blitzPile) \
-                and player1.score - 2 * len(player1.blitzPile) >= player4.score - 2 * len(player4.blitzPile):
+    else:
+        screen.blit(loseImage, END_MESSAGE_COORDS)
+        pygame.display.update()
+        sound.lose.play()
 
-            screen.blit(winImage, END_MESSAGE_COORDS)
-            player1.displayScore(screen)
-            pygame.display.update()
-            sound.win.play()
-            pygame.time.wait(10000)
-            runGame = True
+    pygame.time.wait(5000)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             pygame.quit()
+            return False
+
+    return True
+
+
+
+def main():
+    #0 is for light mode, 1 is for dark mode
+
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    pygame.display.set_caption("BlitzOn!")
+
+    runTitleScreen = True
+
+    controls = Controls()
+
+    clock = pygame.time.Clock()
+
+    darkOrLightState = 0
+
+    while runTitleScreen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        clock.tick(60)
+        screen.blit(titleImage, (0, 0))
+        screen.blit(playButtonImage, PLAY_BUTTON_COORDS)
+
+        if darkOrLightState == 0:
+            screen.blit(darkButtonImage, DARK_LIGHT_BUTTON_COORDS)
         else:
-            screen.blit(loseImage, END_MESSAGE_COORDS)
-            pygame.display.update()
-            sound.lose.play()
-            pygame.time.wait(10000)
-            runGame = True
-            pygame.quit()
+            screen.blit(lightButtonImage, DARK_LIGHT_BUTTON_COORDS)
+
+        if controls.leftButtonClick():
+            mousePos = controls.getMousePos()
+            if controls.mouseInArea(mousePos, PLAY_BUTTON_COORDS, PLAY_BUTTON_SIZE):
+                sound.buttonClick.play()
+                screen.blit(playButtonClickedImage, PLAY_BUTTON_COORDS)
+                pygame.display.update()
+                pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
+                runTitleScreen = False
+            if controls.mouseInArea(mousePos, DARK_LIGHT_BUTTON_COORDS, DARK_LIGHT_BUTTON_SIZE):
+                sound.buttonClick.play()
+                if darkOrLightState == 0:
+                    screen.blit(darkButtonClickedImage, DARK_LIGHT_BUTTON_COORDS)
+                    pygame.display.update()
+                    pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
+                    screen.blit(lightButtonImage, DARK_LIGHT_BUTTON_COORDS)
+                    pygame.display.update()
+                    darkOrLightState = 1
+                else:
+                    screen.blit(lightButtonClickedImage, DARK_LIGHT_BUTTON_COORDS)
+                    pygame.display.update()
+                    pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
+                    screen.blit(darkButtonImage, DARK_LIGHT_BUTTON_COORDS)
+                    pygame.display.update()
+                    darkOrLightState = 0
+
+        pygame.display.update()
+
+    while True:
+        board, player1, player2, player3, player4, controls = start()
+        runGame, gameEnded = game(screen, sound, board, player1, player2, player3, player4, controls)
+
+        if gameEnded:
+            restart = end(screen, sound, board, player1, player2, player3, player4, controls)
+            if not restart:
+                break
 
 
 main()
