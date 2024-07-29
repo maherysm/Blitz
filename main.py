@@ -17,10 +17,6 @@ winImage = pygame.image.load(os.path.join('images', END_SCREENS[0]))
 loseImage = pygame.image.load(os.path.join('images', END_SCREENS[1]))
 playButtonImage = pygame.image.load(os.path.join('images/buttons', PLAY_BUTTON))
 playButtonClickedImage = pygame.image.load(os.path.join('images/buttons', PLAY_BUTTON_CLICKED))
-darkButtonImage = pygame.image.load(os.path.join('images/buttons', DARK_BUTTON))
-darkButtonClickedImage = pygame.image.load(os.path.join('images/buttons', DARK_BUTTON_CLICKED))
-lightButtonImage = pygame.image.load(os.path.join('images/buttons', LIGHT_BUTTON))
-lightButtonClickedImage = pygame.image.load(os.path.join('images/buttons', LIGHT_BUTTON_CLICKED))
 ReadyButtonImage = pygame.image.load(os.path.join('images/buttons', READY_BUTTON))
 ReadyButtonClickedImage = pygame.image.load(os.path.join('images/buttons', READY_BUTTON_CLICKED))
 
@@ -250,10 +246,7 @@ def main():
         screen.blit(titleImage, (0, 0))
         screen.blit(playButtonImage, PLAY_BUTTON_COORDS)
 
-        if darkOrLightState == 0:
-            screen.blit(darkButtonImage, DARK_LIGHT_BUTTON_COORDS)
-        else:
-            screen.blit(lightButtonImage, DARK_LIGHT_BUTTON_COORDS)
+
 
         if controls.leftButtonClick():
             mousePos = controls.getMousePos()
@@ -263,22 +256,6 @@ def main():
                 pygame.display.update()
                 pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
                 runTitleScreen = False
-            if controls.mouseInArea(mousePos, DARK_LIGHT_BUTTON_COORDS, DARK_LIGHT_BUTTON_SIZE):
-                sound.buttonClick.play()
-                if darkOrLightState == 0:
-                    screen.blit(darkButtonClickedImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
-                    screen.blit(lightButtonImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    darkOrLightState = 1
-                else:
-                    screen.blit(lightButtonClickedImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    pygame.time.wait(BUTTON_PRESS_ANIMATION_DELAY)
-                    screen.blit(darkButtonImage, DARK_LIGHT_BUTTON_COORDS)
-                    pygame.display.update()
-                    darkOrLightState = 0
 
         pygame.display.update()
 
