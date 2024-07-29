@@ -75,14 +75,21 @@ class AI(Player):
             if self.blitzPilePlayAttempt(board, self.index) == -1:
                 self.index = -1
                 self.blitzPlaceAttempt = False
+                self.timeDelay = pygame.time.get_ticks()
         elif self.postPilePlaceAttempt:
             self.indices = self.postPilesPlayAttempt(board, self.indices[0], self.indices[1])
             if self.indices[0] == -1:
                 self.postPilePlaceAttempt = False
+                self.timeDelay = pygame.time.get_ticks()
         elif self.woodPilePlaceAttempt:
             self.indexB = self.woodPilePlayAttempt(board, self.indexB)
             if self.indexB == -1:
                 self.woodPilePlaceAttempt = False
+                self.timeDelay = pygame.time.get_ticks()
+
+        if pygame.time.get_ticks() - self.timeDelay > self.waitTime:
+            self.flipWoodPile()
+            self.timeDelay = pygame.time.get_ticks()
 
     def AIwaitTime(self):
         return random.randrange(DIFF_LEVELS[self.diffLevel][0], DIFF_LEVELS[self.diffLevel][1])

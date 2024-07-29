@@ -150,17 +150,6 @@ def game(screen, sound, board, player1, player2, player3, player4, controls):
         player3.playCards(board[darkOrLightState])
         player4.playCards(board[darkOrLightState])
 
-        if pygame.time.get_ticks() - player2.timeDelay > player2.waitTime:
-            player2.flipWoodPile()
-            player2.timeDelay = pygame.time.get_ticks()
-
-        if pygame.time.get_ticks() - player3.timeDelay > player3.waitTime:
-            player3.flipWoodPile()
-            player3.timeDelay = pygame.time.get_ticks()
-
-        if pygame.time.get_ticks() - player4.timeDelay > player4.waitTime:
-            player4.flipWoodPile()
-            player4.timeDelay = pygame.time.get_ticks()
 
         # checks for and removes piles of 10 from the game board
         board[darkOrLightState].checkForDutchPilesToRemove()
